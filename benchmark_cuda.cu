@@ -6,6 +6,7 @@
 
 #include "benchmark_cuda.h"
 
+// code running on GPU
 template <class T> __global__ void test_gpu(T limit)
 
 {
@@ -35,6 +36,8 @@ template <class T> __global__ void test_gpu(T limit)
     sum += (a + b);
 }
 
+
+// code running on CPU
 template <class T> void test_cpu(T limit)
 
 {

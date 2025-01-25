@@ -3,14 +3,13 @@
 SUFFIX := $(shell python-config --extension-suffix)
 LIB := benchmark$(SUFFIX)
 
-INC := $(shell python -m pybind11 --includes) -I$(shell pg_config --includedir) -I/usr/local/cuda/include -I.
-LDFLAGS := -L$(shell pg_config --libdir)
+INC := $(shell python -m pybind11 --includes) -I/usr/local/cuda/include -I.
+LDFLAGS := -L/usr/local/cuda/lib64
 NVCC := $(shell which nvcc 2>/dev/null)
 
 CXXFLAGS := -O3 -Wall -std=c++11 -D LINUX -fPIC -fvisibility=hidden $(INC) -D CUDA
 SO_SRC_FILES += benchmark_cuda.cu benchmark.cpp
 LDLIBS += -lcudart
-LDFLAGS += -L/usr/local/cuda/lib64
 
 objfiles = $(patsubst %.cu,%.o, $(patsubst %.cpp,%.o, $(1)))
 
