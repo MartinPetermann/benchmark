@@ -46,5 +46,21 @@ if __name__ == "__main__":
     if options.gpu == True and options.threads == -1:
         options.threads = 1
 
-    benchmark.perftest(options.gpu, not options.float, options.tblocks, options.threads)
-
+    duration = benchmark.perftest(
+        options.gpu, not options.float, options.tblocks, options.threads
+    )
+    if options.gpu == True:
+        print(
+            "GPU {:<10} ({:>3} thread block(s), each {:>3} thread(s)): {}s".format(
+                ("float" if options.float else "u_int32_t"),
+                options.tblocks,
+                options.threads,
+                duration,
+            )
+        )
+    else:
+        print(
+            "CPU {:<10}:                                                {}s".format(
+                ("float" if options.float else "u_int32_t"), duration
+            )
+        )

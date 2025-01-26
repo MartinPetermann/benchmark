@@ -1,7 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-
 #include <chrono>
 
 #include "benchmark_cuda.h"
@@ -35,7 +31,6 @@ template <class T> __global__ void test_gpu(T limit)
     }
     sum += (a + b);
 }
-
 
 // code running on CPU
 template <class T> void test_cpu(T limit)
@@ -80,8 +75,7 @@ public:
 
 #define LIMIT 20000
 
-
-void perftest(bool gpu, bool integer, int thread_blocks, int threads)
+double perftest(bool gpu, bool integer, int thread_blocks, int threads)
 {
     Timer t;
     t.start();
@@ -92,15 +86,12 @@ void perftest(bool gpu, bool integer, int thread_blocks, int threads)
             test_gpu<float><<<thread_blocks, threads>>>(LIMIT);
         }
         cudaDeviceSynchronize();
-        printf("GPU %10s (%d thread block(s), each %d thread(s)): %fs\n", (integer ? "u_int32_t" : "float"), thread_blocks, threads, t.stop());
     } else {
         if (integer) {
             test_cpu<u_int32_t>(LIMIT);
         } else {
             test_cpu<float>(LIMIT);
         }
-        printf("CPU %10s:                                       %fs\n", (integer ? "u_int32_t" : "float"), t.stop());
     }
+    return t.stop();
 }
-
-
